@@ -535,3 +535,9 @@ llm_authoring/
 
 The LLM should continue to generate drafts only. The judge and verifier should
 remain deterministic.
+
+## 8. License
+
+Mnemosyne is licensed under the GNU Affero General Public License v3.0. See [LICENSE](LICENSE).
+
+AGPLv3 is intentional for this project: if someone modifies Mnemosyne and offers it as a network service, users of that service should also be able to receive the corresponding source code.
