@@ -4,6 +4,8 @@
 
 Mnemosyne is a local-first Python coding-practice app. It helps you solve problems, manage a personal problem bank, and optionally turn rough requests or source materials into verified coding-practice problems with an LLM.
 
+*If you are trying to find a job, and create simple coding test for students. This is what you need, with the help of LLM, it can turn ambiguous request into specific coding problem for your practice !*
+
 ## Install
 
 ```bash
