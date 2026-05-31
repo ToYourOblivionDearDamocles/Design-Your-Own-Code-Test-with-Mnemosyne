@@ -1,0 +1,29 @@
+{
+  "id": "transformer_attention_scores",
+  "title": "Transformer Attention Scores",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "transformer_attention_scores",
+  "arg_types": ["numpy.ndarray", "numpy.ndarray"],
+  "return_type": "numpy.ndarray",
+  "tags": ["python", "numpy", "transformer", "attention"],
+  "requirements": [
+    {"package": "numpy", "pip": "numpy>=2.0", "import_name": "numpy"}
+  ],
+  "constraints": ["Compute scaled dot-product scores only.", "Do not apply softmax.", "Use the key dimension d_k for scaling.", "Return a NumPy-compatible matrix."],
+  "checker": {"type": "allclose", "atol": 1e-05, "rtol": 1e-05},
+  "timeout_seconds": 3,
+  "statement": "Write a Python function `transformer_attention_scores(Q, K)` that computes the scaled dot-product attention score matrix used in Transformers.\n\nFor query matrix $Q$ and key matrix $K$, the attention score matrix is\n\n$$\nS = \\frac{QK^T}{\\sqrt{d_k}},\n$$\n\nwhere $d_k$ is the key dimension.\n\n## Input / Output\n- `Q`: `numpy.ndarray` of shape `(num_queries, d_k)`.\n- `K`: `numpy.ndarray` of shape `(num_keys, d_k)`.\n- Returns: `numpy.ndarray` of shape `(num_queries, num_keys)` containing the scaled scores.",
+  "starter_code": "import numpy as np\n\ndef transformer_attention_scores(Q: np.ndarray, K: np.ndarray) -> np.ndarray:\n    pass\n",
+  "reference_solution": "import numpy as np\n\ndef transformer_attention_scores(Q, K):\n    Q = np.asarray(Q, dtype=float)\n    K = np.asarray(K, dtype=float)\n    d_k = K.shape[1]\n    return (Q @ K.T) / np.sqrt(d_k)\n",
+  "solution_explanation": "The function computes every query-key dot product using matrix multiplication, then divides by the square root of the key dimension to stabilize the scale of logits.",
+  "complexity": {"time": "O(q * k * d)", "space": "O(q * k)"},
+  "visible_tests": [
+    {"name": "two_queries_two_keys", "args": [[[1, 0], [0, 1]], [[1, 0], [1, 1]]], "expected": [[0.7071067811865475, 0.7071067811865475], [0, 0.7071067811865475]]},
+    {"name": "one_query_three_dimensions", "args": [[[1, 2, 0]], [[0, 1, 1], [1, 0, 1]]], "expected": [[1.1547005383792517, 0.5773502691896258]]}
+  ],
+  "hidden_tests": [
+    {"name": "zero_query", "args": [[[0, 0]], [[1, 2], [3, 4]]], "expected": [[0, 0]]},
+    {"name": "negative_entries", "args": [[[1, -1], [2, 0]], [[2, 1], [-1, 3]]], "expected": [[0.7071067811865475, -2.82842712474619], [2.82842712474619, -1.414213562373095]]}
+  ]
+}

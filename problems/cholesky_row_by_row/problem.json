@@ -1,0 +1,34 @@
+{
+  "id": "cholesky_row_by_row",
+  "title": "Building the Cholesky Factor Row by Row",
+  "difficulty": "medium",
+  "entry_kind": "function",
+  "function_name": "cholesky_row_by_row",
+  "tags": ["math", "linear-algebra", "numpy"],
+  "requirements": [
+    {"package": "numpy", "pip": "numpy>=2.0", "import_name": "numpy"}
+  ],
+  "constraints": [
+    "The input matrix A is guaranteed to be a symmetric positive definite (SPD) matrix.",
+    "The output must be an upper triangular matrix R such that A = R^T R.",
+    "Do not use numpy.linalg.cholesky directly; implement the row-by-row algorithm."
+  ],
+  "checker": {"type": "allclose", "atol": 1e-05, "rtol": 1e-05},
+  "timeout_seconds": 5,
+  "arg_types": ["numpy.ndarray"],
+  "return_type": "numpy.ndarray",
+  "statement": "Imagine you have a symmetric positive definite (SPD) matrix $A$. We want to break it down into simpler building blocks. One of the most elegant ways to do this is the **Cholesky Decomposition**, which factors $A$ into the product of an upper triangular matrix $R$ and its transpose:\n\n$$A = R^T R$$\n\nwhere $R$ is an upper triangular matrix (all elements below the main diagonal are zero).\n\nIn this problem, you will implement the **row-by-row** algorithm to construct $R$ directly from $A$. \n\n### The Row-by-Row Algorithm\n\nFor an $n \\times n$ matrix, we compute the entries of $R$ row by row, from top to bottom ($i = 0, 1, \\dots, n-1$). Within each row $i$, we compute the elements from left to right ($j = i, i+1, \\dots, n-1$).\n\n1. **Diagonal elements ($j = i$):**\n   The diagonal element $R_{ii}$ is computed by subtracting the squared contributions of the already computed elements in column $i$ from $A_{ii}$, and then taking the square root:\n   \n   $$R_{ii} = \\sqrt{A_{ii} - \\sum_{k=0}^{i-1} R_{ki}^2}$$\n\n2. **Off-diagonal elements ($j > i$):**\n   The elements to the right of the diagonal in row $i$ are computed by:\n   \n   $$R_{ij} = \\frac{1}{R_{ii}} \\left( A_{ij} - \\sum_{k=0}^{i-1} R_{ki} R_{kj} \\right)$$\n\n3. **Below-diagonal elements ($j < i$):**\n   Since $R$ is upper triangular, these elements are simply $0$.\n\nImplement this algorithm to find the upper triangular Cholesky factor $R$.\n\n## Input / Output\n\n- `A`: `numpy.ndarray` of shape `(n, n)`, representing a symmetric positive definite matrix.\n- Return: `numpy.ndarray` of shape `(n, n)`, representing the upper triangular matrix $R$ such that $A = R^T R$.\n\n### Example\n\nFor a $2 \\times 2$ matrix:\n$$A = \\begin{pmatrix} 4 & 12 \\\\ 12 & 45 \\end{pmatrix}$$\n\n- Row 0:\n  - $R_{00} = \\sqrt{A_{00}} = \\sqrt{4} = 2$\n  - $R_{01} = \\frac{A_{01}}{R_{00}} = \\frac{12}{2} = 6$\n- Row 1:\n  - $R_{11} = \\sqrt{A_{11} - R_{01}^2} = \\sqrt{45 - 6^2} = \\sqrt{45 - 36} = \\sqrt{9} = 3$\n\nThus, the upper triangular matrix is:\n$$R = \\begin{pmatrix} 2 & 6 \\\\ 0 & 3 \\end{pmatrix}$$",
+  "starter_code": "import numpy as np\n\ndef cholesky_row_by_row(A: np.ndarray) -> np.ndarray:\n    pass\n",
+  "reference_solution": "import numpy as np\n\ndef cholesky_row_by_row(A: np.ndarray) -> np.ndarray:\n    n = A.shape[0]\n    R = np.zeros((n, n), dtype=float)\n    \n    for i in range(n):\n        # Diagonal element\n        sum_sq = sum(R[k, i] ** 2 for k in range(i))\n        R[i, i] = np.sqrt(A[i, i] - sum_sq)\n        \n        # Off-diagonal elements\n        for j in range(i + 1, n):\n            sum_prod = sum(R[k, i] * R[k, j] for k in range(i))\n            R[i, j] = (A[i, j] - sum_prod) / R[i, i]\n            \n    return R\n",
+  "solution_explanation": "The solution directly implements the row-by-row formulation of the Cholesky decomposition. For each row $i$, we first compute the diagonal element $R_{ii}$ by subtracting the sum of squares of the elements above it in the same column from $A_{ii}$ and taking the square root. Then, for each subsequent column $j > i$, we compute $R_{ij}$ by subtracting the dot product of the already computed parts of columns $i$ and $j$ from $A_{ij}$, and dividing by $R_{ii}$. All elements below the diagonal remain zero.",
+  "complexity": {"time": "O(n^3)", "space": "O(n^2)"},
+  "visible_tests": [
+    {"name": "example_2x2", "args": [[[4.0, 12.0], [12.0, 45.0]]], "expected": [[2.0, 6.0], [0.0, 3.0]]},
+    {"name": "identity_3x3", "args": [[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]], "expected": [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]}
+  ],
+  "hidden_tests": [
+    {"name": "1x1_matrix", "args": [[[16.0]]], "expected": [[4.0]]},
+    {"name": "3x3_matrix", "args": [[[4.0, 2.0, -2.0], [2.0, 10.0, 2.0], [-2.0, 2.0, 6.0]]], "expected": [[2.0, 1.0, -1.0], [0.0, 3.0, 1.0], [0.0, 0.0, 2.0]]},
+    {"name": "4x4_matrix", "args": [[[9.0, 3.0, -6.0, 12.0], [3.0, 26.0, -7.0, -11.0], [-6.0, -7.0, 9.0, -7.0], [12.0, -11.0, -7.0, 35.0]]], "expected": [[3.0, 1.0, -2.0, 4.0], [0.0, 5.0, -1.0, -3.0], [0.0, 0.0, 2.0, -1.0], [0.0, 0.0, 0.0, 3.0]]}
+  ]
+}

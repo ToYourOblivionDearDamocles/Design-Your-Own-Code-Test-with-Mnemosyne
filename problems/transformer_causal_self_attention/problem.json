@@ -1,0 +1,35 @@
+{
+  "id": "transformer_causal_self_attention",
+  "title": "Transformer Causal Self-Attention",
+  "difficulty": "medium",
+  "entry_kind": "function",
+  "function_name": "transformer_causal_self_attention",
+  "arg_types": ["numpy.ndarray", "numpy.ndarray", "numpy.ndarray"],
+  "return_type": "numpy.ndarray",
+  "tags": ["python", "numpy", "transformer", "attention", "causal_mask"],
+  "requirements": [
+    {"package": "numpy", "pip": "numpy>=2.0", "import_name": "numpy"}
+  ],
+  "constraints": [
+    "Compute scaled dot-product attention.",
+    "Apply a lower-triangular causal mask before softmax.",
+    "Query position i may attend only to key positions j <= i.",
+    "Future positions must receive attention probability 0.",
+    "Return the final attention output, not the weights."
+  ],
+  "checker": {"type": "allclose", "atol": 1e-05, "rtol": 1e-05},
+  "timeout_seconds": 3,
+  "statement": "Write a Python function `transformer_causal_self_attention(Q, K, V)` that computes causal scaled dot-product self-attention.\n\nCausal attention prevents a token from seeing future tokens. First compute scores\n\n$$\nS = \\frac{QK^T}{\\sqrt{d_k}}.\n$$\n\nThen apply the causal mask\n\n$$\nM_{ij} = 1 \\text{ if } j \\le i, \\qquad M_{ij} = 0 \\text{ if } j > i.\n$$\n\nAfter masked row-wise softmax, return the value mixture\n\n$$\nO = \\operatorname{softmax}(S_{masked})V.\n$$\n\n## Input / Output\n- `Q`: `numpy.ndarray` of shape `(seq_len, d_k)`.\n- `K`: `numpy.ndarray` of shape `(seq_len, d_k)`.\n- `V`: `numpy.ndarray` of shape `(seq_len, d_v)`.\n- Returns: `numpy.ndarray` of shape `(seq_len, d_v)` containing causal self-attention outputs.",
+  "starter_code": "import numpy as np\n\ndef transformer_causal_self_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray) -> np.ndarray:\n    pass\n",
+  "reference_solution": "import numpy as np\n\ndef transformer_causal_self_attention(Q, K, V):\n    Q = np.asarray(Q, dtype=float)\n    K = np.asarray(K, dtype=float)\n    V = np.asarray(V, dtype=float)\n    scores = (Q @ K.T) / np.sqrt(K.shape[1])\n    seq_len = scores.shape[0]\n    mask = np.tril(np.ones((seq_len, seq_len)))\n    masked_scores = np.where(mask == 1, scores, -np.inf)\n    shifted = masked_scores - np.max(masked_scores, axis=1, keepdims=True)\n    exp_scores = np.exp(shifted)\n    exp_scores = np.where(mask == 1, exp_scores, 0.0)\n    weights = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)\n    return weights @ V\n",
+  "solution_explanation": "The function combines scaled dot-product attention with a lower-triangular mask. The first token can only use its own value, while later tokens can mix previous values and their own value.",
+  "complexity": {"time": "O(n^2 * d_k + n^2 * d_v)", "space": "O(n^2 + n * d_v)"},
+  "visible_tests": [
+    {"name": "two_token_identity_attention", "args": [[[1, 0], [0, 1]], [[1, 0], [0, 1]], [[10, 0], [0, 20]]], "expected": [[10, 0], [3.302384506733431, 13.395230986533138]]},
+    {"name": "three_token_causal_attention", "args": [[[1, 1], [1, 0], [0, 1]], [[1, 0], [0, 1], [1, 1]], [[1, 0], [0, 1], [2, 2]]], "expected": [[1, 0], [0.6697615493266569, 0.3302384506733431], [1, 1.2033362780393577]]}
+  ],
+  "hidden_tests": [
+    {"name": "first_token_cannot_see_future", "args": [[[0, 1], [1, 0]], [[0, 1], [1, 0]], [[5, 5], [100, 100]]], "expected": [[5, 5], [68.62734718603241, 68.62734718603241]]},
+    {"name": "uniform_second_row_when_scores_equal", "args": [[[1, 0], [0, 0]], [[1, 0], [0, 1]], [[2, 0], [0, 4]]], "expected": [[2, 0], [1, 2]]}
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "spd_matrix_validator",
+  "title": "Is My Matrix Safe for Cholesky?",
+  "difficulty": "medium",
+  "entry_kind": "function",
+  "function_name": "is_spd",
+  "tags": ["math", "matrix", "numpy", "linear-algebra"],
+  "requirements": [
+    {"package": "numpy", "pip": "numpy>=2.0", "import_name": "numpy"}
+  ],
+  "constraints": [
+    "The input matrix A will be a square 2D list of floats.",
+    "Use a tolerance of 1e-9 for checking symmetry: |A_ij - A_ji| < 1e-9.",
+    "Use a tolerance of 1e-9 for checking positive eigenvalues: all eigenvalues must be > 1e-9."
+  ],
+  "checker": {"type": "exact"},
+  "timeout_seconds": 5,
+  "statement": "Imagine you have a special mathematical machine called the **Cholesky Decomposition**. This machine can break down a square grid of numbers (a matrix) into a simpler triangular shape, which makes solving complex engineering and physics equations incredibly fast! \n\nHowever, this machine is very picky. It only works on matrices that are **Symmetric Positive Definite (SPD)**. If you feed it any other matrix, the machine will break (or mathematically, try to take the square root of a negative number!).\n\nTo keep our machine safe, we need to build a validator function `is_spd(A)` that checks if a matrix $A$ is safe for Cholesky decomposition. \n\nA matrix $A$ is **Symmetric Positive Definite (SPD)** if it meets two conditions:\n1. **Symmetry**: The matrix is a perfect mirror image across its main diagonal. That is, for every row $i$ and column $j$, we have:\n   $$A_{ij} = A_{ji}$$\n2. **Positive Definiteness**: All of its eigenvalues are strictly positive ($> 0$). In practice, due to tiny computer rounding errors, we check if all eigenvalues are greater than a small threshold: $10^{-9}$.\n\nWrite a function to determine if a given matrix is safe (returns `True`) or unsafe (returns `False`).\n\n## Input / Output\n\n- `A`: `list[list[float]]`, a square 2D list representing the matrix.\n- Return: `bool`, `True` if the matrix is Symmetric Positive Definite, `False` otherwise.\n\n### Example\n\nFor the matrix:\n$$A = \\begin{pmatrix} 4 & 12 & -16 \\\\ 12 & 37 & -43 \\\\ -16 & -43 & 98 \\end{pmatrix}$$\n- It is symmetric because $A_{01} = A_{10} = 12$, $A_{02} = A_{20} = -16$, and $A_{12} = A_{21} = -43$.\n- Its eigenvalues are all positive.\n- Thus, `is_spd(A)` should return `True`.",
+  "starter_code": "import numpy as np\n\ndef is_spd(A: list[list[float]]) -> bool:\n    # Your code here\n    pass\n",
+  "reference_solution": "import numpy as np\n\ndef is_spd(A: list[list[float]]) -> bool:\n    matrix = np.array(A, dtype=float)\n    # Check if square\n    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:\n        return False\n    \n    # Check symmetry: A must equal its transpose within a small tolerance\n    if not np.allclose(matrix, matrix.T, atol=1e-9):\n        return False\n    \n    # Check positive definiteness: all eigenvalues must be > 1e-9\n    try:\n        eigenvalues = np.linalg.eigvalsh(matrix)\n        if np.all(eigenvalues > 1e-9):\n            return True\n    except np.linalg.LinAlgError:\n        return False\n        \n    return False\n",
+  "solution_explanation": "The solution converts the input list of lists into a NumPy array. It first verifies that the matrix is square. Then, it checks for symmetry by comparing the matrix to its transpose using `np.allclose` with an absolute tolerance of `1e-9`. Finally, it computes the eigenvalues of the symmetric matrix using `np.linalg.eigvalsh` (which is optimized and numerically stable for symmetric matrices) and verifies that all eigenvalues are strictly greater than `1e-9`.",
+  "complexity": {
+    "time": "O(N^3) where N is the number of rows/columns in the matrix, due to eigenvalue computation.",
+    "space": "O(N^2) to store the matrix and its transpose."
+  },
+  "visible_tests": [
+    {"name": "valid_spd_matrix", "args": [[[4.0, 12.0, -16.0], [12.0, 37.0, -43.0], [-16.0, -43.0, 98.0]]], "expected": true},
+    {"name": "asymmetric_matrix", "args": [[[4.0, 11.0, -16.0], [12.0, 37.0, -43.0], [-16.0, -43.0, 98.0]]], "expected": false},
+    {"name": "negative_eigenvalue_matrix", "args": [[[1.0, 2.0], [2.0, 1.0]]], "expected": false}
+  ],
+  "hidden_tests": [
+    {"name": "identity_matrix", "args": [[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]], "expected": true},
+    {"name": "zero_matrix", "args": [[[0.0, 0.0], [0.0, 0.0]]], "expected": false},
+    {"name": "negative_diagonal", "args": [[[-2.0, 0.0], [0.0, 2.0]]], "expected": false}
+  ]
+}

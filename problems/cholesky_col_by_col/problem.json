@@ -1,0 +1,33 @@
+{
+  "id": "cholesky_col_by_col",
+  "title": "Building the Cholesky Factor Column by Column",
+  "difficulty": "medium",
+  "entry_kind": "function",
+  "function_name": "cholesky_col_by_col",
+  "tags": ["math", "matrix", "linear-algebra", "numpy"],
+  "requirements": [
+    {"package": "numpy", "pip": "numpy>=2.0", "import_name": "numpy"}
+  ],
+  "constraints": [
+    "The input matrix A is guaranteed to be a symmetric positive definite (SPD) matrix.",
+    "The output must be an upper triangular matrix R such that A = R^T * R.",
+    "Do not use numpy.linalg.cholesky directly."
+  ],
+  "checker": {"type": "allclose", "atol": 1e-05, "rtol": 1e-05},
+  "timeout_seconds": 5,
+  "arg_types": ["numpy.ndarray"],
+  "return_type": "numpy.ndarray",
+  "statement": "Imagine you have a symmetric positive definite (SPD) matrix $A$. We want to break it down into a simpler, upper triangular matrix $R$ such that:\n\n$$A = R^T R$$\n\nThis process is called **Cholesky Decomposition**. In this problem, you will implement the **column-by-column** algorithm to construct $R$ entry-by-entry.\n\n### The Column-by-Column Algorithm\n\nFor an $n \\times n$ matrix, we want to find the upper triangular matrix $R$ where $R_{i,j} = 0$ for $i > j$. \n\nWe can compute the entries of $R$ column-by-column (from $j = 0$ to $n-1$). For each column $j$, we compute the entries from top to bottom (from $i = 0$ to $j$):\n\n1. For the off-diagonal elements in column $j$ (where $i < j$):\n   $$R_{i,j} = \\frac{1}{R_{i,i}} \\left( A_{i,j} - \\sum_{k=0}^{i-1} R_{k,i} R_{k,j} \\right)$$\n\n2. For the diagonal element of column $j$ (where $i = j$):\n   $$R_{j,j} = \\sqrt{A_{j,j} - \\sum_{k=0}^{j-1} R_{k,j}^2}$$\n\nImplement this algorithm to return the upper triangular matrix $R$.\n\n### Input / Output\n\n- `A`: `numpy.ndarray` of shape `(n, n)`, representing a symmetric positive definite matrix.\n- Return: `numpy.ndarray` of shape `(n, n)`, representing the upper triangular Cholesky factor $R$ such that $A = R^T R$.\n\n### Example\n\nFor a $2 \\times 2$ matrix:\n$$A = \\begin{pmatrix} 4 & 12 \\\\ 12 & 45 \\end{pmatrix}$$\n\n- Column $j = 0$:\n  - $R_{0,0} = \\sqrt{A_{0,0}} = \\sqrt{4} = 2$\n- Column $j = 1$:\n  - $R_{0,1} = \\frac{1}{R_{0,0}} (A_{0,1}) = \\frac{1}{2} (12) = 6$\n  - $R_{1,1} = \\sqrt{A_{1,1} - R_{0,1}^2} = \\sqrt{45 - 6^2} = \\sqrt{45 - 36} = \\sqrt{9} = 3$\n\nThus, the upper triangular matrix $R$ is:\n$$R = \\begin{pmatrix} 2 & 6 \\\\ 0 & 3 \\end{pmatrix}$$",
+  "starter_code": "import numpy as np\n\ndef cholesky_col_by_col(A: np.ndarray) -> np.ndarray:\n    # Your code here\n    pass\n",
+  "reference_solution": "import numpy as np\n\ndef cholesky_col_by_col(A: np.ndarray) -> np.ndarray:\n    n = A.shape[0]\n    R = np.zeros((n, n), dtype=float)\n    \n    for j in range(n):\n        for i in range(j):\n            # Compute off-diagonal elements in column j\n            s = sum(R[k, i] * R[k, j] for k in range(i))\n            R[i, j] = (A[i, j] - s) / R[i, i]\n        \n        # Compute diagonal element in column j\n        s_diag = sum(R[k, j] ** 2 for k in range(j))\n        R[j, j] = np.sqrt(A[j, j] - s_diag)\n        \n    return R\n",
+  "solution_explanation": "The solution directly implements the column-by-column Cholesky formulation. We initialize an n x n matrix of zeros. For each column j from 0 to n-1, we first compute the upper elements R[i, j] for i < j using the previously computed elements of R. Finally, we compute the diagonal element R[j, j] using the elements in the same column j. This ensures we only access elements of R that have already been computed.",
+  "complexity": {"time": "O(n^3)", "space": "O(n^2)"},
+  "visible_tests": [
+    {"name": "example_2x2", "args": [[[4.0, 12.0], [12.0, 45.0]]], "expected": [[2.0, 6.0], [0.0, 3.0]]},
+    {"name": "identity_3x3", "args": [[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]], "expected": [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]}
+  ],
+  "hidden_tests": [
+    {"name": "diagonal_matrix", "args": [[[9.0, 0.0], [0.0, 16.0]]], "expected": [[3.0, 0.0], [0.0, 4.0]]},
+    {"name": "spd_3x3", "args": [[[4.0, 12.0, -16.0], [12.0, 37.0, -43.0], [-16.0, -43.0, 98.0]]], "expected": [[2.0, 6.0, -8.0], [0.0, 1.0, 5.0], [0.0, 0.0, 3.0]]}
+  ]
+}

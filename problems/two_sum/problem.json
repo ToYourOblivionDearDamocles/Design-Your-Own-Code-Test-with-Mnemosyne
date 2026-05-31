@@ -1,0 +1,128 @@
+{
+  "id": "two_sum",
+  "title": "Two Sum",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "two_sum",
+  "tags": [
+    "array",
+    "hash map",
+    "warmup"
+  ],
+  "requirements": [],
+  "constraints": [
+    "Assume exactly one solution exists.",
+    "Return the two indices in increasing order."
+  ],
+  "checker": {
+    "type": "exact"
+  },
+  "timeout_seconds": 3,
+  "statement": "# Two Sum\n\nWrite a function `two_sum(nums, target)` that returns indices of the two numbers such that they add up to `target`.\n\nMathematically, find indices $i < j$ such that:\n\n$$\nnums[i] + nums[j] = target\n$$\n\nAssume exactly one solution exists. Return the two indices in increasing order.",
+  "starter_code": "def two_sum(nums: list[int], target: int) -> list[int]:\n    # TODO: return two indices in increasing order\n    pass\n",
+  "reference_solution": "def two_sum(nums, target):\n    seen = {}\n    for i, x in enumerate(nums):\n        y = target - x\n        if y in seen:\n            return sorted([seen[y], i])\n        seen[x] = i\n",
+  "solution_explanation": "Use a hash map from number to its index. For each value, compute the complement needed to reach the target. If that complement was seen earlier, return the two indices. Otherwise store the current number for future matches.",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)"
+  },
+  "visible_tests": [
+    {
+      "name": "basic example",
+      "args": [
+        [
+          2,
+          7,
+          11,
+          15
+        ],
+        9
+      ],
+      "expected": [
+        0,
+        1
+      ]
+    },
+    {
+      "name": "middle pair",
+      "args": [
+        [
+          3,
+          2,
+          4
+        ],
+        6
+      ],
+      "expected": [
+        1,
+        2
+      ]
+    },
+    {
+      "name": "Test1",
+      "args": [
+        [
+          2,
+          7,
+          11,
+          15
+        ],
+        9
+      ],
+      "expected": [
+        0,
+        1
+      ]
+    }
+  ],
+  "hidden_tests": [
+    {
+      "name": "duplicate values",
+      "args": [
+        [
+          3,
+          3
+        ],
+        6
+      ],
+      "expected": [
+        0,
+        1
+      ]
+    },
+    {
+      "name": "negative value",
+      "args": [
+        [
+          -1,
+          -2,
+          -3,
+          -4,
+          -5
+        ],
+        -8
+      ],
+      "expected": [
+        2,
+        4
+      ]
+    },
+    {
+      "name": "late pair",
+      "args": [
+        [
+          10,
+          20,
+          30,
+          40,
+          50
+        ],
+        90
+      ],
+      "expected": [
+        3,
+        4
+      ]
+    }
+  ]
+}

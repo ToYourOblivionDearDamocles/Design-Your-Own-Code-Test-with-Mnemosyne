@@ -1,0 +1,83 @@
+{
+  "id": "transformer_multi_head_attention",
+  "title": "Transformer Multi-Head Attention",
+  "difficulty": "hard",
+  "entry_kind": "function",
+  "function_name": "transformer_multi_head_attention",
+  "arg_types": ["numpy.ndarray", "numpy.ndarray", "numpy.ndarray", "numpy.ndarray", "numpy.ndarray", "int"],
+  "return_type": "numpy.ndarray",
+  "tags": ["python", "numpy", "transformer", "attention", "multi_head_attention"],
+  "requirements": [
+    {"package": "numpy", "pip": "numpy>=2.0", "import_name": "numpy"}
+  ],
+  "constraints": [
+    "Compute Q = X @ Wq, K = X @ Wk, and V = X @ Wv.",
+    "Split Q, K, and V into num_heads heads by reshaping from (seq_len, model_dim) to (num_heads, seq_len, head_dim).",
+    "Compute scaled dot-product attention independently for each head.",
+    "Concatenate heads back to shape (seq_len, model_dim).",
+    "Apply the output projection Wo.",
+    "Do not use PyTorch or high-level attention APIs."
+  ],
+  "checker": {"type": "allclose", "atol": 1e-05, "rtol": 1e-05},
+  "timeout_seconds": 3,
+  "statement": "Write a Python function `transformer_multi_head_attention(X, Wq, Wk, Wv, Wo, num_heads)` that implements a simplified Transformer multi-head self-attention layer.\n\nFirst project the input into queries, keys, and values:\n\n$$\nQ = XW_q, \\qquad K = XW_k, \\qquad V = XW_v.\n$$\n\nThen split the model dimension into heads. For each head $h$, compute\n\n$$\nO_h = \\operatorname{softmax}\\left(\\frac{Q_h K_h^T}{\\sqrt{d_{head}}}\\right)V_h.\n$$\n\nFinally concatenate all head outputs and apply the output projection:\n\n$$\nO = \\operatorname{Concat}(O_1, \\ldots, O_H)W_o.\n$$\n\n## Input / Output\n- `X`: `numpy.ndarray` of shape `(seq_len, model_dim)`.\n- `Wq`: `numpy.ndarray` of shape `(model_dim, model_dim)`.\n- `Wk`: `numpy.ndarray` of shape `(model_dim, model_dim)`.\n- `Wv`: `numpy.ndarray` of shape `(model_dim, model_dim)`.\n- `Wo`: `numpy.ndarray` of shape `(model_dim, output_dim)`.\n- `num_heads`: `int`, the number of attention heads.\n- Returns: `numpy.ndarray` of shape `(seq_len, output_dim)`.",
+  "starter_code": "import numpy as np\n\ndef transformer_multi_head_attention(X: np.ndarray, Wq: np.ndarray, Wk: np.ndarray, Wv: np.ndarray, Wo: np.ndarray, num_heads: int) -> np.ndarray:\n    pass\n",
+  "reference_solution": "import numpy as np\n\ndef transformer_multi_head_attention(X, Wq, Wk, Wv, Wo, num_heads):\n    X = np.asarray(X, dtype=float)\n    Wq = np.asarray(Wq, dtype=float)\n    Wk = np.asarray(Wk, dtype=float)\n    Wv = np.asarray(Wv, dtype=float)\n    Wo = np.asarray(Wo, dtype=float)\n    Q = X @ Wq\n    K = X @ Wk\n    V = X @ Wv\n    seq_len, model_dim = Q.shape\n    head_dim = model_dim // num_heads\n    Qh = Q.reshape(seq_len, num_heads, head_dim).transpose(1, 0, 2)\n    Kh = K.reshape(seq_len, num_heads, head_dim).transpose(1, 0, 2)\n    Vh = V.reshape(seq_len, num_heads, head_dim).transpose(1, 0, 2)\n    head_outputs = []\n    for h in range(num_heads):\n        scores = (Qh[h] @ Kh[h].T) / np.sqrt(head_dim)\n        shifted = scores - np.max(scores, axis=1, keepdims=True)\n        weights = np.exp(shifted) / np.sum(np.exp(shifted), axis=1, keepdims=True)\n        head_outputs.append(weights @ Vh[h])\n    concat = np.asarray(head_outputs).transpose(1, 0, 2).reshape(seq_len, model_dim)\n    return concat @ Wo\n",
+  "solution_explanation": "The implementation follows the Transformer multi-head attention pipeline: project to Q, K, V; split into heads; run scaled dot-product attention per head; concatenate; then apply the output projection.",
+  "complexity": {"time": "O(n * d^2 + h * n^2 * d_h + n * d * o)", "space": "O(n * d + h * n^2 + n * o)"},
+  "visible_tests": [
+    {
+      "name": "identity_two_heads",
+      "args": [
+        [[1, 0, 0, 0], [0, 1, 0, 0]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        2
+      ],
+      "expected": [[0.6697615493266569, 0.3302384506733431, 0, 0], [0.3302384506733431, 0.6697615493266569, 0, 0]]
+    },
+    {
+      "name": "single_token_identity",
+      "args": [
+        [[1, 0, 1, 0]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        2
+      ],
+      "expected": [[1, 0, 1, 0]]
+    }
+  ],
+  "hidden_tests": [
+    {
+      "name": "output_projection_two_dimensions",
+      "args": [
+        [[1, 2, 0, 0], [0, 0, 1, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0], [0, 1], [1, 0], [0, 1]],
+        2
+      ],
+      "expected": [[1.4716820814573541, 2.4433641629147083], [1.304429682506957, 1.804429682506957]]
+    },
+    {
+      "name": "two_active_heads",
+      "args": [
+        [[1, 0, 0, 1], [0, 1, 1, 0]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+        2
+      ],
+      "expected": [
+        [0.6697615493266569, 0.3302384506733431, 0.3302384506733431, 0.6697615493266569],
+        [0.3302384506733431, 0.6697615493266569, 0.6697615493266569, 0.3302384506733431]
+      ]
+    }
+  ]
+}
