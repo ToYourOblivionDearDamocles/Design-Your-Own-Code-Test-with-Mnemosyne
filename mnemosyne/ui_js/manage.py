@@ -87,7 +87,7 @@ MANAGE_SCRIPT = r"""    async function loadManagerWorkspace() {
         constraints: ['Return 0 when nums is empty.'],
         checker: {type: 'exact'},
         timeout_seconds: 3,
-        statement: '# Sum Values\n\n## Problem\n\nGiven `nums`, return the sum of all integers in `nums`. Return `0` when `nums` is empty.\n\n## Input / Output\n\n- `nums`: `list[int]`, the values to add.\n- Return: `int`, the total sum of the values in `nums`.',
+        statement: '## Problem\n\nGiven `nums`, return the sum of all integers in `nums`. Return `0` when `nums` is empty.\n\n## Input / Output\n\n- `nums`: `list[int]`, the values to add.\n- Return: `int`, the total sum of the values in `nums`.',
         theory: 'Adding a list is an accumulation pattern: keep a running total and visit each value once.',
         examples: [
           {
