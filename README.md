@@ -4,9 +4,15 @@ Warm. White. Runnable.
 
 Mnemosyne is a local-first Python coding practice platform. It keeps the product simple: browse problems, write code, edit the problem bank, and create new verifier-ready problems. The codebase is organized so a GitHub download feels understandable instead of mysterious.
 
+
 ![Problem List](docs/images/problem-list.png)
 
 ## Start
+=======
+*If you are trying to find a job, and create simple coding test for students. This is what you need, with the help of LLM, it can turn ambiguous request into specific coding problem for your practice !*
+
+## Install
+
 
 ```bash
 ./scripts/setup.sh
