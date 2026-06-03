@@ -10,8 +10,7 @@ ML coding, numerical methods coding.
 <img src="docs/images/problem-list.png" alt="Problem-list" width="620">
 
 ## Start
-=======
-*If you are trying to find a job, and create simple coding test for students. This is what you need, with the help of LLM, it can turn ambiguous request into specific coding problem for your practice !*
+Design Your Own code test with python and markdown !
 
 ## Install
 
