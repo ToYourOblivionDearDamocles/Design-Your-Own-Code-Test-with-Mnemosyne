@@ -4,6 +4,7 @@ import ast
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -148,9 +149,10 @@ def main_check() -> int:
     check("UI defines central view router", "function setView(view)" in APP_HTML and "setView('catalog')" in APP_HTML and "setView('manage')" in APP_HTML and "setView('llm')" in APP_HTML)
 
     script_text = extract_main_script(APP_HTML)
-    script_path = Path("/private/tmp/mnemosyne_system_ui.js")
-    script_path.write_text(script_text, encoding="utf-8")
-    node = subprocess.run(["node", "--check", str(script_path)], text=True, capture_output=True)
+    with tempfile.TemporaryDirectory(prefix="mnemosyne_system_ui_") as temp_dir:
+        script_path = Path(temp_dir) / "mnemosyne_system_ui.js"
+        script_path.write_text(script_text, encoding="utf-8")
+        node = subprocess.run(["node", "--check", str(script_path)], text=True, capture_output=True)
     check("main UI script passes node --check", node.returncode == 0, node.stderr)
 
     check("at least 40 regression checks ran", CHECKS_RUN >= 40, CHECKS_RUN)

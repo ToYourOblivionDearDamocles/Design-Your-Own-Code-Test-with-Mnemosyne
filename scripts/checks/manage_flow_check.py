@@ -111,7 +111,7 @@ def mutate_like_manage(problem: dict[str, Any], idx: int) -> dict[str, Any]:
 def main_check() -> int:
     original_store_dir = problem_store.PROBLEMS_DIR
     original_author_dir = problem_authoring.PROBLEMS_DIR
-    temp_root = Path(tempfile.mkdtemp(prefix="mnemosyne_manage_flow_", dir="/private/tmp"))
+    temp_root = Path(tempfile.mkdtemp(prefix="mnemosyne_manage_flow_"))
     try:
         problem_store.PROBLEMS_DIR = temp_root
         problem_authoring.PROBLEMS_DIR = temp_root

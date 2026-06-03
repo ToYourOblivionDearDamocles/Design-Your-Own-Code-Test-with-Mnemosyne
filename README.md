@@ -7,8 +7,7 @@ It is useful for you if you want to design your own code
 test for different subjects like leetcode style coding problem,
 ML coding, numerical methods coding.
 
-
-<img src="docs/images/promblem-list.png" alt="Problem-list" width="520">
+<img src="docs/images/problem-list.png" alt="Problem-list" width="620">
 
 ## Start
 =======
@@ -34,15 +33,47 @@ Use another port:
 ./scripts/run.sh 8854
 ```
 
+## Cross-Platform Start
+
+Use the Python scripts on macOS, Linux, or Windows:
+
+```bash
+python scripts/setup.py
+python scripts/run.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8000
+```
+
+To use another port:
+
+```bash
+python scripts/run.py 8854
+```
+
 ## Screens
+
+### Practice
 
 You can practice your coding and look at your solution here.
 <img src="docs/images/practice.png" alt="Practice" width="720">
 
+
+
+### Manage
+
 You can modify the problem and create new problem here.
+
 <img src="docs/images/manage.png" alt="Manage" width="720">
 
-You can copy paste the prompt and chat with LLM to generate the .json file and import in the problem bank here
+
+
+### Create
+
+You can copy paste the prompt or chat with LLM to generate the .json file and import in the problem bank here. The LLM function is under development. I suggest you to create the problem through Manage.
 <img src="docs/images/create.png" alt="Create" width="720">
 
 ## Dependencies
@@ -109,43 +140,8 @@ mnemosyne/prompts/json/
 Useful prompt files:
 
 ```text
-direct_json_authoring_prompt.json   prompt copied for Direct JSON mode
-problem_agent_system.json           system prompt for in-app LLM problem creation
-create_problem_user_message.json    template for creating new problems
-repair_problem_user_message.json    template for repairing problem drafts
-contract_problem_collection.json    JSON contract for generated problems
-contract_test_drafts.json           JSON contract for generated tests
+direct_json_authoring_prompt.json   prompt copied to comunicate with your chatbot
 ```
-
-Most prompt files use a `text` field. Template prompts use a `template` field and placeholders like:
-
-```text
-{{user_request}}
-{{count}}
-{{errors_json}}
-{{warnings_json}}
-```
-
-Keep these placeholders unless you also update the Python code that renders the prompt.
-
-After changing a prompt file, check that it is still valid JSON:
-
-```bash
-.venv/bin/python -m json.tool mnemosyne/prompts/json/problem_agent_system.json >/dev/null
-```
-
-Restart the app after editing prompts:
-
-```bash
-./scripts/run.sh
-```
-
-## Use
-
-- Problem List: choose a saved problem.
-- Practice: write code, run tests, and read the result.
-- Manage: edit saved problems or create a new one.
-- Create: draft JSON and read verifier feedback.
 
 ## Files
 
