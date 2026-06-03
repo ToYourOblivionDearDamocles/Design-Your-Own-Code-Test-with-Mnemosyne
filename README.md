@@ -1,8 +1,6 @@
 # Mnemosyne
 
-Warm. White. Runnable.
-
-Mnemosyne is a local-first Python coding practice platform. It keeps the product simple: browse problems, write code, edit the problem bank, and create new verifier-ready problems. The codebase is organized so a GitHub download feels understandable instead of mysterious.
+Design Your Own Code Problem with Mnemosyne
 
 
 ![Problem List](docs/images/problem-list.png)
@@ -73,10 +71,3 @@ data/              local database, created when the app runs
 
 For a fuller local pass, run the other checks in `scripts/checks/` the same way.
 
-## Product Taste
-
-Do not make it messy.
-
-User input should survive navigation. A new browser tab should be independent. Saved problems should stay shared through the local backend. The Manager Create button should do one clean thing: ask for a title, then open the normal editor.
-
-Simple is not empty. Simple is stable.
