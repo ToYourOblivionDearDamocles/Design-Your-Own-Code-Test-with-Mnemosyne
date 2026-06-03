@@ -1,0 +1,21 @@
+{
+  "id": "pandas_category_revenue",
+  "title": "Category Revenue with Pandas",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "pandas_category_revenue",
+  "tags": ["python", "pandas", "dependency", "dataframe"],
+  "requirements": [{"package": "pandas", "pip": "pandas", "import_name": "pandas"}],
+  "constraints": ["Use a pandas DataFrame and group by `category`.", "Return a plain dictionary mapping category names to totals."],
+  "checker": {"type": "allclose", "atol": 1e-6, "rtol": 1e-6},
+  "timeout_seconds": 8,
+  "statement": "## Problem\n\nGiven purchase records, compute total revenue for each category.\n\n## Input / Output\n\n- `records`: `list[dict]`, each record has `category` and `amount`.\n- Return: `dict[str, float]`, category totals.",
+  "theory": "Pandas turns row-shaped dictionaries into a DataFrame. Grouping by a column and summing another column is the core pattern behind many analytics tables.",
+  "examples": [{"name": "Walkthrough", "body": "Two `books` rows with amounts `10` and `20` produce a `books` total of `30`."}],
+  "starter_code": "def pandas_category_revenue(records: list[dict]) -> dict[str, float]:\n    pass\n",
+  "reference_solution": "import pandas as pd\n\n\ndef pandas_category_revenue(records: list[dict]) -> dict[str, float]:\n    frame = pd.DataFrame(records)\n    grouped = frame.groupby(\"category\", sort=True)[\"amount\"].sum()\n    return {str(category): float(total) for category, total in grouped.items()}\n",
+  "solution_explanation": "Build a DataFrame, call `groupby(\"category\")`, sum the `amount` column, and convert the grouped Series into a normal dictionary.",
+  "complexity": {"time": "O(n log k)", "space": "O(n)"},
+  "visible_tests": [{"name": "two categories", "args": [[{"category": "books", "amount": 10}, {"category": "tools", "amount": 5}, {"category": "books", "amount": 20}]], "expected": {"books": 30.0, "tools": 5.0}}, {"name": "single category", "args": [[{"category": "lab", "amount": 1.5}, {"category": "lab", "amount": 2.5}]], "expected": {"lab": 4.0}}],
+  "hidden_tests": []
+}

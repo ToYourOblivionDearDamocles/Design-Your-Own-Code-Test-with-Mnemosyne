@@ -1,0 +1,23 @@
+{
+  "id": "solve_two_by_two_linear_system",
+  "title": "Solve a Two by Two Linear System",
+  "difficulty": "medium",
+  "entry_kind": "function",
+  "function_name": "solve_two_by_two_linear_system",
+  "arg_types": ["list[list[float]]", "list[float]"],
+  "return_type": "list[float]",
+  "tags": ["python", "linear-algebra", "math"],
+  "requirements": [],
+  "constraints": ["The matrix determinant is nonzero."],
+  "checker": {"type": "allclose", "atol": 1e-5, "rtol": 1e-5},
+  "timeout_seconds": 3,
+  "statement": "## Problem\n\nSolve the linear system $Ax=b$ for a two-by-two matrix.\n\n## Input / Output\n\n- `A`: `list[list[float]]`, a $2\\times2$ matrix `[[a,b],[c,d]]`.\n- `b`: `list[float]`, the two-value right-hand side.\n- Return: `list[float]`, the solution `[x,y]`.",
+  "theory": "For a non-singular two-by-two matrix, Cramer's rule solves the system using the determinant $ad-bc$.",
+  "examples": [{"name": "Walkthrough", "body": "For $2x+y=4$ and $x+3y=7$, the solution is $x=1$ and $y=2$."}],
+  "starter_code": "def solve_two_by_two_linear_system(A: list[list[float]], b: list[float]) -> list[float]:\n    pass\n",
+  "reference_solution": "def solve_two_by_two_linear_system(A: list[list[float]], b: list[float]) -> list[float]:\n    a, c0 = A[0]\n    c1, d = A[1]\n    e, f = b\n    det = a * d - c0 * c1\n    x = (e * d - c0 * f) / det\n    y = (a * f - e * c1) / det\n    return [x, y]\n",
+  "solution_explanation": "Pseudocode: unpack the four matrix entries, compute the determinant, then compute each numerator with Cramer's rule. This is appropriate for a fixed-size system because it is simple and avoids package dependencies.",
+  "complexity": {"time": "O(1)", "space": "O(1)"},
+  "visible_tests": [{"name": "basic", "args": [[[2.0, 1.0], [1.0, 3.0]], [4.0, 7.0]], "expected": [1.0, 2.0]}, {"name": "identity", "args": [[[1.0, 0.0], [0.0, 1.0]], [5.0, -2.0]], "expected": [5.0, -2.0]}],
+  "hidden_tests": []
+}

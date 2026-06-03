@@ -1,0 +1,21 @@
+{
+  "id": "jax_sigmoid_batch",
+  "title": "Batch Sigmoid with JAX",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "jax_sigmoid_batch",
+  "tags": ["python", "jax", "dependency", "array"],
+  "requirements": [{"package": "jax", "pip": "jax[cpu]", "import_name": "jax"}],
+  "constraints": ["Use JAX or `jax.numpy` for the vectorized computation.", "Return plain Python floats in a list."],
+  "checker": {"type": "allclose", "atol": 1e-6, "rtol": 1e-6},
+  "timeout_seconds": 15,
+  "statement": "## Problem\n\nCompute the sigmoid function for every value in a batch of logits.\n\n## Input / Output\n\n- `logits`: `list[float]`, raw scores.\n- Return: `list[float]`, sigmoid probabilities.",
+  "theory": "The sigmoid maps a real number to a value between `0` and `1`. JAX arrays make it natural to apply the same transformation to the whole batch.",
+  "examples": [{"name": "Walkthrough", "body": "For `[0, 1, -1]`, sigmoid returns approximately `[0.5, 0.7310586, 0.2689414]`."}],
+  "starter_code": "def jax_sigmoid_batch(logits: list[float]) -> list[float]:\n    pass\n",
+  "reference_solution": "import jax.numpy as jnp\n\n\ndef jax_sigmoid_batch(logits: list[float]) -> list[float]:\n    x = jnp.asarray(logits, dtype=jnp.float32)\n    return (1.0 / (1.0 + jnp.exp(-x))).tolist()\n",
+  "solution_explanation": "Convert the list to a JAX array, apply the vectorized sigmoid formula, and convert the result back to a plain list for the judge.",
+  "complexity": {"time": "O(n)", "space": "O(n)"},
+  "visible_tests": [{"name": "three logits", "args": [[0, 1, -1]], "expected": [0.5, 0.7310586, 0.2689414]}, {"name": "wide logits", "args": [[2, -2]], "expected": [0.8807971, 0.1192029]}],
+  "hidden_tests": []
+}

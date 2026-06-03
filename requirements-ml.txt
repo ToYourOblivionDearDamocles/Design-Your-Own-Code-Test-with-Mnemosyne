@@ -1,4 +1,0 @@
-# Optional packages for future NumPy/PyTorch problems.
-# Install only when a problem declares these requirements.
-numpy>=2.0
-torch>=2.2

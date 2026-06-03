@@ -1,0 +1,21 @@
+{
+  "id": "torch_relu_unit_vector",
+  "title": "ReLU Unit Vector with PyTorch",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "torch_relu_unit_vector",
+  "tags": ["python", "torch", "dependency", "tensor"],
+  "requirements": [{"package": "torch", "pip": "torch", "import_name": "torch"}],
+  "constraints": ["Use PyTorch tensor operations.", "If the ReLU vector has zero norm, return zeros with the same length."],
+  "checker": {"type": "allclose", "atol": 1e-6, "rtol": 1e-6},
+  "timeout_seconds": 12,
+  "statement": "## Problem\n\nApply ReLU to a vector and then normalize the result to unit L2 length.\n\n## Input / Output\n\n- `values`: `list[float]`, the input vector.\n- Return: `list[float]`, the normalized ReLU vector.",
+  "theory": "ReLU clamps negative values to zero. L2 normalization divides by the Euclidean norm, which is useful before comparing vector directions.",
+  "examples": [{"name": "Walkthrough", "body": "For `[-1, 3, 4]`, ReLU gives `[0, 3, 4]`. Its norm is `5`, so return `[0, 0.6, 0.8]`."}],
+  "starter_code": "def torch_relu_unit_vector(values: list[float]) -> list[float]:\n    pass\n",
+  "reference_solution": "import torch\n\n\ndef torch_relu_unit_vector(values: list[float]) -> list[float]:\n    tensor = torch.tensor(values, dtype=torch.float32)\n    activated = torch.relu(tensor)\n    norm = torch.linalg.vector_norm(activated)\n    if float(norm) == 0.0:\n        return activated.tolist()\n    return (activated / norm).tolist()\n",
+  "solution_explanation": "Create a float tensor, call `torch.relu`, compute the vector norm, guard the zero vector, and return the normalized tensor as a list.",
+  "complexity": {"time": "O(n)", "space": "O(n)"},
+  "visible_tests": [{"name": "positive tail", "args": [[-1, 3, 4]], "expected": [0, 0.6, 0.8]}, {"name": "all non-positive", "args": [[-2, 0, -5]], "expected": [0, 0, 0]}],
+  "hidden_tests": []
+}

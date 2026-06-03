@@ -1,0 +1,21 @@
+{
+  "id": "numpy_center_columns",
+  "title": "Center Matrix Columns with NumPy",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "numpy_center_columns",
+  "tags": ["python", "numpy", "dependency", "matrix"],
+  "requirements": [{"package": "numpy", "pip": "numpy", "import_name": "numpy"}],
+  "constraints": ["Use NumPy array operations to compute the column means.", "Return a JSON-serializable list of lists."],
+  "checker": {"type": "allclose", "atol": 1e-6, "rtol": 1e-6},
+  "timeout_seconds": 5,
+  "statement": "## Problem\n\nGiven a rectangular numeric matrix, subtract each column mean from every value in that column.\n\n## Input / Output\n\n- `matrix`: `list[list[float]]`, a non-empty rectangular matrix.\n- Return: `list[list[float]]`, the centered matrix.",
+  "theory": "Column centering is a common preprocessing step. NumPy can compute all column means at once with `axis=0`, then broadcast the means across every row.",
+  "examples": [{"name": "Walkthrough", "body": "For `[[1, 2], [3, 4], [5, 6]]`, the column means are `[3, 4]`, so the centered matrix is `[[-2, -2], [0, 0], [2, 2]]`."}],
+  "starter_code": "def numpy_center_columns(matrix: list[list[float]]) -> list[list[float]]:\n    pass\n",
+  "reference_solution": "import numpy as np\n\n\ndef numpy_center_columns(matrix: list[list[float]]) -> list[list[float]]:\n    arr = np.asarray(matrix, dtype=float)\n    centered = arr - arr.mean(axis=0)\n    return centered.tolist()\n",
+  "solution_explanation": "Convert the input to a NumPy array, compute `arr.mean(axis=0)`, subtract that row-shaped vector from the full array, and convert the result back to plain lists.",
+  "complexity": {"time": "O(rows * cols)", "space": "O(rows * cols)"},
+  "visible_tests": [{"name": "three rows", "args": [[[1, 2], [3, 4], [5, 6]]], "expected": [[-2, -2], [0, 0], [2, 2]]}, {"name": "constant first column", "args": [[[2, 0], [2, 4]]], "expected": [[0, -2], [0, 2]]}],
+  "hidden_tests": []
+}

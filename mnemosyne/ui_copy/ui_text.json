@@ -1,0 +1,63 @@
+{
+  "direct_json": {
+    "external_prompt": {
+      "intro": "Copy this task into another AI chat. Ask it to create a .json file named mnemosyne_problems.json, or output only that file's raw JSON contents for Mnemosyne's Direct JSON box. Add your topic or constraints at the end; a short \"User request:\" line is recommended but not required."
+    },
+    "opening_instructions": [
+      "Use Direct JSON when another AI chat will generate Mnemosyne problem JSON for you.",
+      "",
+      "1. Copy the prompt above into Gemini, DeepSeek, ChatGPT, or a local model.",
+      "2. Add your own topic, source notes, difficulty, and number of problems at the end. You can write \"User request:\" first, but plain natural language is fine too.",
+      "3. Ask the model to create a .json file. If it cannot attach a file, it must output only the raw JSON file contents: one problem object, an array, or {\"problems\": [...]} for multiple problems.",
+      "4. Paste the generated .json file contents into this Direct JSON box, or attach the .json file, then press Send.",
+      "5. If it fails, copy the verifier feedback and ask the same model to fix the JSON.",
+      "",
+      "In this mode, explanations from the model are not useful here. Do not copy chat prose. Paste only JSON file contents or upload a .json file."
+    ],
+    "accepted_message": {
+      "title": "Accept",
+      "single": "1 question is ready.",
+      "multiple": "{count} questions are ready.",
+      "fallback": "The JSON is ready.",
+      "verified": "{countText} The deterministic verifier passed.",
+      "next": "Review the preview on the right. If it matches your intent, press Commit.",
+      "instruction": "The verifier accepted this draft. You can still edit the JSON externally and paste a new version, or press Commit to add the validated problem(s) to the library."
+    },
+    "verifier_chat": {
+      "title": "Needs fixes",
+      "report_label": "Verifier report:",
+      "next_label": "Next:",
+      "next_steps": [
+        "Copy the verifier feedback and send it to the same AI chat that made the JSON.",
+        "Then paste only the corrected JSON here and press Send again."
+      ]
+    },
+    "notifications": {
+      "checking_json": "Checking JSON with the deterministic verifier...",
+      "no_json_status": "Needs JSON",
+      "paste_json_first": "Paste raw JSON or upload a .json file first.",
+      "no_json_verifier": "No JSON was provided.",
+      "direct_json_only": "Direct JSON mode only accepts raw JSON text or a .json file.",
+      "json_loaded": "Loaded {fileName}. Press Send to run the deterministic verifier."
+    }
+  },
+  "practice": {
+    "run_to_see_results": "Run your code to see test results.",
+    "run_to_see_errors": "Run your code to see program errors.",
+    "no_program_errors": "No program errors yet.",
+    "no_visible_tests": "No visible tests for this problem."
+  },
+  "manager": {
+    "input_changed": "Input changed. Click Outputs to regenerate expected outputs from the reference solution. Commit/Verify will also correct stale outputs.",
+    "nothing_written": "Nothing written yet.",
+    "no_complexity": "No complexity yet.",
+    "no_reference_solution": "No reference solution yet."
+  },
+  "verifier": {
+    "waiting": "Waiting",
+    "passed": "Passed",
+    "failed": "Failed",
+    "warning": "Warning",
+    "blocked": "Blocked"
+  }
+}

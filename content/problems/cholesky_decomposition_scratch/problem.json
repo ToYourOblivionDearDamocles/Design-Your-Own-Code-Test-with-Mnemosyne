@@ -1,0 +1,38 @@
+{
+  "id": "cholesky_decomposition_scratch",
+  "title": "Cholesky Decomposition from Scratch",
+  "difficulty": "medium",
+  "entry_kind": "function",
+  "function_name": "cholesky_decomposition",
+  "arg_types": ["list[list[float]]"],
+  "return_type": "list[list[float]]",
+  "tags": ["math", "linear_algebra", "matrix"],
+  "requirements": [
+    {"package": "scipy", "pip": "scipy", "import_name": "scipy"},
+    {"package": "numpy", "pip": "numpy>=2.0", "import_name": "numpy"}
+  ],
+  "constraints": [
+    "The input matrix $A$ will be square with dimensions $N \\times N$, where $1 \\le N \\le 50$.",
+    "The input matrix $A$ is guaranteed to be real, symmetric, and positive-definite."
+  ],
+  "checker": {"type": "allclose", "atol": 1e-05, "rtol": 1e-05},
+  "timeout_seconds": 3,
+  "statement": "# Cholesky Decomposition from Scratch\n\n## Problem\n\nImplement the Cholesky decomposition for a real, symmetric, and positive-definite matrix $A$ without using external linear algebra libraries like `numpy` or `scipy`. Your function should compute a lower triangular matrix $L$ such that:\n\n$$A = L L^T$$\n\n## Input / Output\n\n- `matrix`: `list[list[float]]`, a 2D list representing the $N \\times N$ symmetric positive-definite matrix $A$.\n- Return: `list[list[float]]`, a 2D list representing the lower triangular matrix $L$. Elements above the main diagonal must be `0.0`.",
+  "theory": "The Cholesky decomposition factors a symmetric positive-definite matrix $A$ into $L L^T$. The components of the lower triangular matrix $L$ can be calculated iteratively using the Cholesky-Banachiewicz algorithm:\n\n$$L_{j,j} = \\sqrt{A_{j,j} - \\sum_{k=1}^{j-1} L_{j,k}^2}$$\n\n$$L_{i,j} = \\frac{1}{L_{j,j}} \\left( A_{i,j} - \\sum_{k=1}^{j-1} L_{i,k} L_{j,k} \\right) \\quad \\text{for } i > j$$",
+  "examples": [
+    {
+      "name": "2x2 Example",
+      "body": "For $A = \\begin{pmatrix} 4 & 12 \\\\ 12 & 45 \\end{pmatrix}$:\n- $L_{0,0} = \\sqrt{4} = 2$\n- $L_{1,0} = \\frac{12}{2} = 6$\n- $L_{1,1} = \\sqrt{45 - 6^2} = \\sqrt{9} = 3$\n\nResult $L = \\begin{pmatrix} 2 & 0 \\\\ 6 & 3 \\end{pmatrix}$."
+    }
+  ],
+  "starter_code": "import scipy\nimport numpy as np\n\ndef cholesky_decomposition(matrix: list[list[float]]) -> list[list[float]]:\n    pass\n",
+  "reference_solution": "import scipy\nimport numpy as np\n\nimport math\n\ndef cholesky_decomposition(matrix: list[list[float]]) -> list[list[float]]:\n    n = len(matrix)\n    L = [[0.0] * n for _ in range(n)]\n    \n    for i in range(n):\n        for j in range(i + 1):\n            s = sum(L[i][k] * L[j][k] for k in range(j))\n            if i == j:\n                L[i][j] = math.sqrt(matrix[i][i] - s)\n            else:\n                L[i][j] = (matrix[i][j] - s) / L[j][j]\n    return L\n",
+  "solution_explanation": "The solution implements the Cholesky-Banachiewicz algorithm. It initializes an $N \\times N$ matrix $L$ filled with zeros. It loops through each row $i$ and column $j \\le i$. For diagonal elements, it subtracts the sum of squares of the previous elements in that row from the original matrix element, then takes the square root. For non-diagonal elements, it calculates the dot product of the completed portions of rows $i$ and $j$, subtracts this from $A_{i,j}$, and divides by the diagonal element $L_{j,j}$.",
+  "complexity": {"time": "O(N^3)", "space": "O(N^2)"},
+  "visible_tests": [
+    {"name": "Identity Matrix", "args": [[[1, 0], [0, 1]]], "expected": [[1, 0], [0, 1]]},
+    {"name": "Standard 2x2", "args": [[[4, 12], [12, 45]]], "expected": [[2, 0], [6, 3]]},
+    {"name": "Standard 3x3", "args": [[[25, 15, -5], [15, 18, 0], [-5, 0, 11]]], "expected": [[5, 0, 0], [3, 3, 0], [-1, 1, 3]]}
+  ],
+  "hidden_tests": []
+}

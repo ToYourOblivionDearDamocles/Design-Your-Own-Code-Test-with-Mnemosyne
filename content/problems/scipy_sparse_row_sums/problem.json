@@ -1,0 +1,22 @@
+{
+  "id": "scipy_sparse_row_sums",
+  "title": "Sparse Row Sums with SciPy",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "scipy_sparse_row_sums",
+  "arg_types": ["scipy.sparse.csr_matrix"],
+  "tags": ["python", "scipy", "dependency", "sparse"],
+  "requirements": [{"package": "scipy", "pip": "scipy", "import_name": "scipy"}],
+  "constraints": ["Use SciPy sparse matrix operations.", "Return one numeric sum per row as a plain list."],
+  "checker": {"type": "allclose", "atol": 1e-6, "rtol": 1e-6},
+  "timeout_seconds": 8,
+  "statement": "## Problem\n\nGiven a sparse matrix, compute the sum of each row.\n\n## Input / Output\n\n- `matrix`: `scipy.sparse.csr_matrix`, converted by the judge from a JSON matrix.\n- Return: `list[float]`, row sums.",
+  "theory": "CSR matrices store mostly-zero data compactly. SciPy sparse operations can sum rows without forcing users to manually scan every zero.",
+  "examples": [{"name": "Walkthrough", "body": "For `[[1, 0, 2], [0, 0, 3]]`, the row sums are `[3, 3]`."}],
+  "starter_code": "from scipy.sparse import csr_matrix\n\n\ndef scipy_sparse_row_sums(matrix: csr_matrix) -> list[float]:\n    pass\n",
+  "reference_solution": "from scipy.sparse import csr_matrix\n\n\ndef scipy_sparse_row_sums(matrix: csr_matrix) -> list[float]:\n    return [float(value) for value in matrix.sum(axis=1).A1]\n",
+  "solution_explanation": "The judge converts the JSON matrix into a CSR matrix. Calling `matrix.sum(axis=1)` computes each row sum, and `.A1` flattens the result for conversion to a list.",
+  "complexity": {"time": "O(nnz + rows)", "space": "O(rows)"},
+  "visible_tests": [{"name": "two rows", "args": [[[1, 0, 2], [0, 0, 3]]], "expected": [3, 3]}, {"name": "three rows", "args": [[[0, 4], [5, 0], [0, 0]]], "expected": [4, 5, 0]}],
+  "hidden_tests": []
+}

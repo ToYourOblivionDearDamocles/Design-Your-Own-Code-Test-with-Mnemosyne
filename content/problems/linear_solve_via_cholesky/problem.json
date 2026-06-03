@@ -1,0 +1,40 @@
+{
+  "id": "linear_solve_via_cholesky",
+  "title": "Solve Linear System via Cholesky Decomposition",
+  "difficulty": "hard",
+  "entry_kind": "function",
+  "function_name": "solve_linear_system",
+  "arg_types": ["numpy.ndarray", "numpy.ndarray"],
+  "return_type": "numpy.ndarray",
+  "tags": ["math", "linear_algebra", "numpy"],
+  "requirements": [
+    {"package": "numpy", "pip": "numpy", "import_name": "numpy"},
+    {"package": "scipy", "pip": "scipy", "import_name": "scipy"}
+  ],
+  "constraints": [
+    "The matrix $A$ is an $N \\times N$ real, symmetric, positive-definite NumPy array.",
+    "The vector $b$ is a 1D NumPy array of length $N$.",
+    "Dimensions fulfill $1 \\le N \\le 500$.",
+    "You must utilize Cholesky factorization to solve the system rather than generic solvers like `np.linalg.solve`."
+  ],
+  "checker": {"type": "allclose", "atol": 1e-05, "rtol": 1e-05},
+  "timeout_seconds": 4,
+  "statement": "# Solve Linear System via Cholesky Decomposition\n\n## Problem\n\nGiven a system of linear equations $A x = b$, where $A$ is a real, symmetric, and positive-definite matrix, solve for $x$ by utilizing Cholesky decomposition. \n\nFirst, compute the lower triangular matrix $L$ such that $A = L L^T$. Then, break the problem into two sequential triangular systems:\n1. Forward substitution: Solve $L y = b$ for $y$.\n2. Back substitution: Solve $L^T x = y$ for $x$.\n\n## Input / Output\n\n- `A`: `numpy.ndarray`, a 2D array of shape `(N, N)`.\n- `b`: `numpy.ndarray`, a 1D array of shape `(N,)`.\n- Return: `numpy.ndarray`, a 1D array of shape `(N,)` representing the solution vector $x$.",
+  "theory": "Using Cholesky factorization to solve $A x = b$ is computationally efficient and numerically stable. Once $A = L L^T$ is established via `scipy.linalg.cholesky`, substituting it back yields $L (L^T x) = b$. Setting $y = L^T x$, we solve the lower-triangular system $L y = b$ for $y$. Since $L$ is triangular, this takes $O(N^2)$ time using forward substitution. Afterward, we solve the upper-triangular system $L^T x = y$ for $x$ in $O(N^2)$ time using back substitution.",
+  "examples": [
+    {
+      "name": "Simple 2x2 System",
+      "body": "For $A = \\begin{pmatrix} 4 & 2 \\\\ 2 & 2 \\end{pmatrix}$ and $b = \\begin{pmatrix} 6 \\\\ 4 \\end{pmatrix}$:\n1. Factorize $A = L L^T \\implies L = \\begin{pmatrix} 2 & 0 \\\\ 1 & 1 \\end{pmatrix}$.\n2. Solve $L y = b \\implies \\begin{pmatrix} 2 & 0 \\\\ 1 & 1 \\end{pmatrix} \\begin{pmatrix} y_0 \\\\ y_1 \\end{pmatrix} = \\begin{pmatrix} 6 \\\\ 4 \\end{pmatrix} \\implies y = \\begin{pmatrix} 3 \\\\ 1 \\end{pmatrix}$.\n3. Solve $L^T x = y \\implies \\begin{pmatrix} 2 & 1 \\\\ 0 & 1 \\end{pmatrix} \\begin{pmatrix} x_0 \\\\ x_1 \\end{pmatrix} = \\begin{pmatrix} 3 \\\\ 1 \\end{pmatrix} \\implies x = \\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}$."
+    }
+  ],
+  "starter_code": "import scipy\n\nimport numpy as np\n\ndef solve_linear_system(A: np.ndarray, b: np.ndarray) -> np.ndarray:\n    pass\n",
+  "reference_solution": "import numpy as np\nimport scipy.linalg\n\ndef solve_linear_system(A: np.ndarray, b: np.ndarray) -> np.ndarray:\n    L = scipy.linalg.cholesky(A, lower=True)\n    y = scipy.linalg.solve_triangular(L, b, lower=True)\n    x = scipy.linalg.solve_triangular(L, y, lower=False, trans='T')\n    return x\n",
+  "solution_explanation": "The reference solution uses `scipy.linalg.cholesky(A, lower=True)` to efficiently obtain the lower triangular factor $L$. It then exploits `scipy.linalg.solve_triangular`, which executes dedicated $O(N^2)$ triangular substitution algorithms rather than the more expensive general $O(N^3)$ Gaussian elimination solver. The argument `trans='T'` or passing `L.T` solves the upper triangular system representing the transposed lower matrix.",
+  "complexity": {"time": "O(N^3) for factorization, O(N^2) for substitution steps", "space": "O(N^2)"},
+  "visible_tests": [
+    {"name": "Identity system", "args": [[[1, 0], [0, 1]], [5, -2]], "expected": [5, -2]},
+    {"name": "Small 2x2 system", "args": [[[4, 2], [2, 2]], [6, 4]], "expected": [1, 1]},
+    {"name": "3x3 System Matrix", "args": [[[9, 3, -6], [3, 17, -10], [-6, -10, 9]], [9, 24, -11]], "expected": [1, 2, 1]}
+  ],
+  "hidden_tests": []
+}

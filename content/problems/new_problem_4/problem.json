@@ -1,0 +1,23 @@
+{
+  "id": "new_problem_4",
+  "title": "This is a problem",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "solve",
+  "tags": ["python", "template"],
+  "requirements": [],
+  "constraints": ["Return 0 when nums is empty."],
+  "checker": {"type": "exact"},
+  "timeout_seconds": 3,
+  "statement": "# Sum Values\n\n## Problem\n\nGiven `nums`, return the sum of all integers in `nums`. Return `0` when `nums` is empty.\n\n## Input / Output\n\n- `nums`: `list[int]`, the values to add.\n- Return: `int`, the total sum of the values in `nums`.",
+  "theory": "Adding a list is an accumulation pattern: keep a running total and visit each value once.",
+  "examples": [
+    {"name": "Worked examples", "body": "### Walkthrough\n\nFor `nums = [1, 2, 3]`, compute $1 + 2 + 3 = 6$."}
+  ],
+  "starter_code": "def solve(nums: list[int]) -> int:\n    pass\n",
+  "reference_solution": "def solve(nums):\n    return sum(nums)\n",
+  "solution_explanation": "Use `sum(nums)` to add every integer. Python returns `0` for an empty list, matching the required edge case.",
+  "complexity": {"time": "O(n)", "space": "O(1)"},
+  "visible_tests": [{"name": "basic", "args": [[1, 2, 3]], "expected": 6}, {"name": "empty", "args": [[]], "expected": 0}],
+  "hidden_tests": []
+}

@@ -1,0 +1,6 @@
+{
+  "id": "contract_source_digest",
+  "kind": "prompt_text",
+  "description": "Prompt-only JSON contract for source-material digest extraction.",
+  "text": "Required JSON contract:\n{\"summary\":\"short source summary\",\"key_concepts\":[\"concept\"],\"problem_briefs\":[{\"id_hint\":\"snake_case_hint\",\"title\":\"Problem title\",\"learning_goal\":\"what this problem teaches\",\"interface\":\"suggested Python function interface\",\"packages\":[\"numpy\"],\"edge_cases\":[\"edge case\"],\"source_notes\":\"short source reference\"}]}\nReturn a compact digest only. Do not create full problem JSON in this step."
+}

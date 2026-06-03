@@ -1,0 +1,6 @@
+{
+  "id": "create_problem_user_message",
+  "kind": "template",
+  "description": "User message template for creating one or more problems from an in-app request.",
+  "template": "Create exactly {{count}} Python coding-practice problem(s).\n\nWithin the required schema, you may be creative about the learning objective, scenario, examples, and edge cases. Aim for problems that feel useful and polished, not generic schema filler. Thank you for helping create good practice material; do not include this thanks in the JSON.\n\nReturn JSON matching this envelope exactly:\n{\"problems\": [problem_object, ...]}\n\nThe final User request section below is the authoritative task. Do not replace it with a different task.\n\nUser request:\n{{user_request}}"
+}

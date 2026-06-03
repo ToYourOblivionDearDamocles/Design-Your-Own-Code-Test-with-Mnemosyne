@@ -1,0 +1,23 @@
+{
+  "id": "two_sum",
+  "title": "Two Sum",
+  "difficulty": "easy",
+  "entry_kind": "function",
+  "function_name": "two_sum",
+  "arg_types": ["list[int]", "int"],
+  "return_type": "list[int]",
+  "tags": ["python", "arrays", "hash-map"],
+  "requirements": [],
+  "constraints": ["Return indices of two distinct elements whose values sum to target."],
+  "checker": {"type": "exact"},
+  "timeout_seconds": 3,
+  "statement": "## Problem\n\nReturn the indices of two numbers in `nums` whose sum is `target`.\n\n## Input / Output\n\n- `nums`: `list[int]`, the input numbers.\n- `target`: `int`, the desired sum.\n- Return: `list[int]`, two indices in increasing order.",
+  "theory": "A hash map stores previously seen values so each new value can look up its complement in constant average time.",
+  "examples": [{"name": "Walkthrough", "body": "For `nums = [2,7,11,15]` and `target = 9`, when we see $7$, its complement $2$ is already stored, so return `[0,1]`."}],
+  "starter_code": "def two_sum(nums: list[int], target: int) -> list[int]:\n    pass\n",
+  "reference_solution": "def two_sum(nums: list[int], target: int) -> list[int]:\n    seen = {}\n    for i, value in enumerate(nums):\n        want = target - value\n        if want in seen:\n            return [seen[want], i]\n        seen[value] = i\n    return []\n",
+  "solution_explanation": "Pseudocode: scan values, compute the complement, return the stored index when present, otherwise store the current value. In engineering terms, this avoids a nested loop and keeps memory proportional to the number of values scanned.",
+  "complexity": {"time": "O(n)", "space": "O(n)"},
+  "visible_tests": [{"name": "basic", "args": [[2, 7, 11, 15], 9], "expected": [0, 1]}, {"name": "later pair", "args": [[3, 2, 4], 6], "expected": [1, 2]}],
+  "hidden_tests": []
+}

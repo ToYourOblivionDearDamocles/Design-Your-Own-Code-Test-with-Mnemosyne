@@ -1,0 +1,6 @@
+{
+  "id": "contract_test_drafts",
+  "kind": "prompt_text",
+  "description": "Prompt-only JSON contract for model-generated test case drafts.",
+  "text": "Required JSON contract:\n{\"tests\":[{\"name\":\"basic\",\"args\":[positional_arg_1]}]}\nFor function tests, do not include expected outputs; the app computes them. Keep args compact, such as {\"name\":\"negative\",\"args\":[[-2,4]]}. For unit-test drafts, use {\"tests\":[{\"name\":\"basic\",\"code\":\"from user_solution import ...\\nassert ...\"}]}."
+}
